@@ -8,7 +8,7 @@ function  createLink(id = '') {
 }
 
 const searchVideo = (query='', limiter,cb) =>
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${limiter}&q=${query}&key=${youtubeToken}`)
+    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=${limiter}&q=${query}&key=${youtubeToken}`)
         .then(res => res.json())
         .then(json => cb(createLink(json.items[0].id.videoId)))
         .catch(_ => {
