@@ -1,8 +1,4 @@
 const pg = require('pg');
-const fetch = require("node-fetch");
-
-// const text = 'INSERT INTO users(name, email) VALUES($1, $2) RETURNING *';
-// const values = ['brianc', 'brian.m.carlson@gmail.com'];
 
 const config = {
     host: 'ec2-52-86-115-245.compute-1.amazonaws.com',
@@ -27,57 +23,46 @@ const client = new pg.Client(config);
 //     }
 // });
 
+const searchUser = (ids, cb) => {
+
+    const text = `SELECT * FROM users WHERE id::text LIKE '${ids}' `;
+
+    client.query(text, (err, res) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        cb(res);
+    });
+}
+
+function addUser(names, ids) {
+
+    searchUser(ids, function (res){
+        if (res.rowCount > 0){
+            console.log("User is already existed")
+
+            return false;
+        } else {
+
+            const text = `INSERT INTO users  VALUES('${ids}', '${names}', 'date', 'medium')`;
+            client.query(text, (err) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log('Data insert successful');
+
+            });
+        }
+    });
+}
 
 client.connect(err => {
     if (err) throw err;
     else { console.log('client connected!') }
 });
 
-
-const searchUser = (id = 0, cb) => {
-    const text = 'SELECT id FROM users WHERE id LIKE VALUES ($1)';
-    const values = [id];
-    client.query(text,values, (err, res) => {
-        if (err) {
-            console.error(err);
-            return;
-        }
-        client.end();
-    });
-}
-
-function addUser(names, ids) {
-    searchUser(ids, function (res){
-        console.log(res);
-    })
-    // const text = `INSERT INTO users (id, name) VALUES ($1,$2)`;
-    // const values = [ids,names];
-    //
-    //
-    // client.query(text, values, (err, res) => {
-    //     if (err) {
-    //         console.error(err);
-    //         return;
-    //     }
-    //     console.log('Data insert successful');
-    //     client.end();
-    // });
-}
-
-
 module.exports = {
     addUser
 }
-
-
-
-// client.query(text, values, (err, res) => {
-//     if (err) {
-//         console.log(err.stack)
-//     } else {
-//         console.log(res.rows[0])
-//         // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
-//     }
-// })
-
-

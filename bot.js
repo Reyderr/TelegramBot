@@ -8,17 +8,9 @@ bot.start((ctx) => {
     pgBase.addUser(ctx.message.from.first_name,ctx.message.from.id);
 });
 
-
-
-
-bot.help((ctx) => ctx.reply('Send me a sticker')) //ответ бота на команду /help
+//bot.help((ctx) => ctx.reply('Send me a sticker')) //ответ бота на команду /help
 
 bot.on('text', (ctx) => searchVideo(ctx.message.text,7, function(res){ ctx.reply(res);}))
-
-
-
-
-
 
 bot.startPolling() // запуск бота
 
