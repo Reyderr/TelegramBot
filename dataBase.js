@@ -1,27 +1,7 @@
 const pg = require('pg');
+const {searchVideo} = require("./search");
 
-const config = {
-    host: 'ec2-52-86-115-245.compute-1.amazonaws.com',
-    // Do not hard code your username and password.
-    // Consider using Node environment variables.
-    user: 'hheqxlyrvsbnfl',
-    password: '44e4dbfc8371613c6f84d4fed16babdfd37b8b48ed43d1d76ccd7bed16ae2e22',
-    database: 'd6ahfju2sipc4q',
-    port: 5432,
-    ssl: {
-        rejectUnauthorized: false
-    }
-};
-
-const client = new pg.Client(config);
-
-
-// const client = new Client({
-//     connectionString: process.env.DATABASE_URL,
-//     ssl: {
-//         rejectUnauthorized: false
-//     }
-// });
+const client = new pg.Client(JSON.parse(process.env.DB_CONFIG));
 
 const searchUser = (ids, cb) => {
 
@@ -36,23 +16,63 @@ const searchUser = (ids, cb) => {
     });
 }
 
+function updateUserData(id, order, duration, limiter){
+    searchUser(id, function (res) {
+        if (res.rowCount === 0) {
+            console.log("User is not existed")
+            return false;
+        }
+        var query = `UPDATE users SET `;
+        if (order != null){
+            query = query + `ordered = '${order}' `;
+        }
+        if (duration != null){
+            query = query + `duration = '${duration}' `;
+        }
+        if (limiter != null){
+            query = query + `limiter = ${limiter} `;
+        }
+        query = query + `WHERE id = ${id}`;
+        console.log(query);
+        client.query(query, (err) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            console.log('Data insert successful');
+        });
+    });
+}
+
 function addUser(names, ids) {
 
     searchUser(ids, function (res){
         if (res.rowCount > 0){
             console.log("User is already existed")
-
             return false;
         } else {
+            const text = `INSERT INTO users  VALUES('${ids}', '${names}', 'date', 'medium', 1)`;
 
-            const text = `INSERT INTO users  VALUES('${ids}', '${names}', 'date', 'medium')`;
             client.query(text, (err) => {
                 if (err) {
                     console.error(err);
                     return;
                 }
                 console.log('Data insert successful');
+            });
+        }
+    });
+}
 
+function createLinks(id, text, cb){
+
+       return  searchUser(id, function (res){
+        if (res.rowCount > 1 || res.rowCount === 0)
+        console.error('User error in DB');
+        else{
+            const user =  res.rows[0];
+            searchVideo(text, user.ordered, user.duration, user.limiter, function (res){
+                cb(res);
             });
         }
     });
@@ -64,5 +84,7 @@ client.connect(err => {
 });
 
 module.exports = {
-    addUser
+    addUser,
+    updateUserData,
+    createLinks
 }

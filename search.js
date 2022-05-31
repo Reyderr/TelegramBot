@@ -2,15 +2,21 @@ const fetch = require('node-fetch');
 require('dotenv').config();
 const youtubeToken = process.env.YOUTUBE_TOKEN;
 
-function  createLinks(id) {
+function  createLinks(items) {
     var link = 'https://www.youtube.com/watch?v=';
-    return  link + id.videoId;
+    var links = [];
+
+    for(const item of items){
+        const l = link + item.id.videoId;
+        links.push(l);
+    }
+    return  links;
 }
 
 const searchVideo = (query='', order = 'rating', videoDuration = 'medium', limiter = 1, cb) => {
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&order=${order}&videoDuration=${videoDuration}&type=video&maxResults=${limiter}&q=${query}&key=${youtubeToken}`)
+    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&videoDuration=${videoDuration}&type=video&maxResults=${limiter}&q=${query}&key=${youtubeToken}`)
         .then(res => res.json())
-        .then(json => cb(createLinks(json.items[0].id)))
+        .then(json => cb(createLinks(json.items)))
         .catch(_ => {
             throw 'API error while fetching the data.'
         });

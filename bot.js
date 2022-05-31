@@ -4,8 +4,10 @@ const bot = new Telegraf(process.env.BOT_TOKEN)
 const pgBase = require("./dataBase")
 
 bot.start((ctx) => {
-    ctx.reply('Привіт. Цей бот створений для полегшення пошуку відео по тегу для перегляду за їжею. Приємного перегляду ' + ctx.message.from.first_name)
+    ctx.reply('Привіт. Цей бот створений для полегшення пошуку відео по тегу для перегляду за їжею. Введіть /help для допомоги. Приємного перегляду ' + ctx.message.from.first_name)
     pgBase.addUser(ctx.message.from.first_name,ctx.message.from.id);
+
+
 });
 
 bot.action('order', ctx=>{
@@ -29,6 +31,36 @@ bot.action('order', ctx=>{
     ctx.answerCbQuery();
 })
 
+bot.action('ord_date', ctx=>{
+    pgBase.updateUserData(ctx.chat.id, 'date', null, null);
+    ctx.answerCbQuery();
+    ctx.reply("Success update");
+})
+
+bot.action('ord_rat', ctx=>{
+    pgBase.updateUserData(ctx.chat.id, 'rate', null, null);
+    ctx.answerCbQuery();
+    ctx.reply("Success update");
+})
+
+bot.action('ord_rel', ctx=>{
+    pgBase.updateUserData(ctx.chat.id, 'relevance', null, null);
+    ctx.answerCbQuery();
+    ctx.reply("Success update");
+})
+
+bot.action('ord_title', ctx=>{
+    pgBase.updateUserData(ctx.chat.id, 'title', null, null);
+    ctx.answerCbQuery();
+    ctx.reply("Success update");
+})
+
+bot.action('ord_count', ctx=>{
+    pgBase.updateUserData(ctx.chat.id, 'viewCount', null, null);
+    ctx.answerCbQuery();
+    ctx.reply("Success update");
+})
+
 bot.action('duration', ctx=>{
     ctx.deleteMessage();
     bot.telegram.sendMessage(ctx.chat.id, "Change video duration", {
@@ -49,6 +81,30 @@ bot.action('duration', ctx=>{
     ctx.answerCbQuery();
 })
 
+bot.action('dur_any', ctx=>{
+    pgBase.updateUserData(ctx.chat.id, null, 'any', null);
+    ctx.answerCbQuery();
+    ctx.reply("Success update");
+})
+
+bot.action('dur_long', ctx=>{
+    pgBase.updateUserData(ctx.chat.id, null, 'long', null);
+    ctx.answerCbQuery();
+    ctx.reply("Success update");
+})
+
+bot.action('dur_medium', ctx=>{
+    pgBase.updateUserData(ctx.chat.id, null, 'medium', null);
+    ctx.answerCbQuery();
+    ctx.reply("Success update");
+})
+
+bot.action('dur_short', ctx=>{
+    pgBase.updateUserData(ctx.chat.id, null, 'short', null);
+    ctx.answerCbQuery();
+    ctx.reply("Success update");
+})
+
 bot.action('number_v', ctx=>{
     ctx.deleteMessage();
     bot.telegram.sendMessage(ctx.chat.id, "Change video duration", {
@@ -66,6 +122,24 @@ bot.action('number_v', ctx=>{
         }
     })
     ctx.answerCbQuery();
+})
+
+bot.action('num_1', ctx=>{
+    pgBase.updateUserData(ctx.chat.id, null, null, 1);
+    ctx.answerCbQuery();
+    ctx.reply("Success update");
+})
+
+bot.action('num_2', ctx=>{
+    pgBase.updateUserData(ctx.chat.id, null, null, 2);
+    ctx.answerCbQuery();
+    ctx.reply("Success update");
+})
+
+bot.action('num_3', ctx=>{
+    pgBase.updateUserData(ctx.chat.id, null, null, 3);
+    ctx.answerCbQuery();
+    ctx.reply("Success update");
 })
 
 bot.action('command', ctx=>{
@@ -97,56 +171,13 @@ bot.command('command', ctx=>{
     })
 })
 
-// bot.command('help', ctx=>{
-//     bot.telegram.sendMessage(ctx.chat.id, "Bot info", {
-//         reply_markup:{
-//             keyboard: [
-//                 [
-//                 {text:"test 1"},
-//                 {text:"test 2"}
-//                     ]
-//             ],
-//             resize_keyboard: true,
-//             one_time_keyboard:true
-//         }
-//     })
-// })
+bot.command('help', ctx=>{
+    bot.telegram.sendMessage(ctx.chat.id, "Для пошуку відео введіть елемент назви чи тему відео і просто відішліть боту. Для зміни налаштувань пошуку використовуйте команду /command")
+})
 
-
-//bot.on('text', (ctx) => searchVideo(ctx.message.text,7, function(res){ ctx.reply(res);}))
+bot.on('text', (ctx) => pgBase.createLinks(ctx.chat.id, ctx.message.text, function (res){
+    for (const link of res)
+        ctx.reply(link);
+}))
 
 bot.startPolling() // запуск бота
-
-
-// bot.command("inline", (ctx) => {
-//     ctx.reply("Hi there!", {
-//         reply_markup: {
-//             inline_keyboard: [
-//                 /* Inline buttons. 2 side-by-side */
-//                 [ { text: "Button 1", callback_data: "btn-1" }, { text: "Button 2", callback_data: "btn-2" } ],
-//
-//                 /* One button */
-//                 [ { text: "Next", callback_data: "next" } ],
-//
-//                 /* Also, we can have URL buttons. */
-//                 [ { text: "Open in browser", url: "telegraf.js.org" } ]
-//             ]
-//         }
-//     });
-// });
-
-// bot.on('callback_query', (ctx) =>{
-//     const command = ctx.update.callback_query.data;
-//     switch (command) {
-//         case 'order':
-//             test('order');
-//             break
-//
-//         case 'duration':
-//             test('duration');
-//             break
-//     }
-//
-//     ctx.answerCbQuery();
-//
-// });
