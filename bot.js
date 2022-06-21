@@ -12,18 +12,18 @@ bot.start((ctx) => {
 
 bot.action('order', ctx=>{
     ctx.deleteMessage();
-    bot.telegram.sendMessage(ctx.chat.id, "Change video order", {
+    bot.telegram.sendMessage(ctx.chat.id, "Шукати за ", {
         reply_markup:{
             inline_keyboard: [
                 [
-                    {text:"Date",callback_data:'ord_date'},
-                    {text:"Rating",callback_data:'ord_rat'},
-                    {text:"Relevance",callback_data:'ord_rel'},
-                    {text:"Title",callback_data:'ord_title'},
-                    {text:"View Count",callback_data:'ord_count'}
+                    {text:"Датою",callback_data:'ord_date'},
+                    {text:"Рейтингом",callback_data:'ord_rat'},
+                    {text:"Актуальністю",callback_data:'ord_rel'},
+                    {text:"Назвою",callback_data:'ord_title'},
+                    {text:"Переглядами",callback_data:'ord_count'}
                 ],
                 [
-                    {text:"Back to menu",callback_data:'command'}
+                    {text:"До основного меню",callback_data:'command'}
                 ]
             ]
         }
@@ -63,17 +63,17 @@ bot.action('ord_count', ctx=>{
 
 bot.action('duration', ctx=>{
     ctx.deleteMessage();
-    bot.telegram.sendMessage(ctx.chat.id, "Change video duration", {
+    bot.telegram.sendMessage(ctx.chat.id, "Тривалість відео", {
         reply_markup:{
             inline_keyboard: [
                 [
-                    {text:"Any",callback_data:'dur_any'},
-                    {text:"Long",callback_data:'dur_long'},
-                    {text:"Medium",callback_data:'dur_medium'},
-                    {text:"Short",callback_data:'dur_short'}
+                    {text:"Будь яка",callback_data:'dur_any'},
+                    {text:"Довше 20хв",callback_data:'dur_long'},
+                    {text:"4-20хв",callback_data:'dur_medium'},
+                    {text:"До 4хв",callback_data:'dur_short'}
                 ],
                 [
-                    {text:"Back to menu",callback_data:'command'}
+                    {text:"До основного меню",callback_data:'command'}
                 ]
             ]
         }
@@ -107,7 +107,7 @@ bot.action('dur_short', ctx=>{
 
 bot.action('number_v', ctx=>{
     ctx.deleteMessage();
-    bot.telegram.sendMessage(ctx.chat.id, "Change video duration", {
+    bot.telegram.sendMessage(ctx.chat.id, "Кількість відео для перегляду", {
         reply_markup:{
             inline_keyboard: [
                 [
@@ -116,7 +116,7 @@ bot.action('number_v', ctx=>{
                     {text:"3",callback_data:'num_3'}
                 ],
                 [
-                    {text:"Back to menu",callback_data:'command'}
+                    {text:"До основного меню",callback_data:'command'}
                 ]
             ]
         }
@@ -144,13 +144,13 @@ bot.action('num_3', ctx=>{
 
 bot.action('command', ctx=>{
     ctx.deleteMessage();
-    bot.telegram.sendMessage(ctx.chat.id, "Change video settings", {
+    bot.telegram.sendMessage(ctx.chat.id, "Налаштування відео", {
         reply_markup:{
             inline_keyboard: [
                 [
-                    {text:"Order",callback_data:'order'},
-                    {text:"Duration",callback_data:'duration'},
-                    {text:"Number of videos",callback_data:'number_v'}
+                    {text:"Тип пошуку",callback_data:'order'},
+                    {text:"Тривалість",callback_data:'duration'},
+                    {text:"Кількість відео",callback_data:'number_v'}
                 ]
             ]
         }
@@ -158,13 +158,13 @@ bot.action('command', ctx=>{
 })
 
 bot.command('command', ctx=>{
-    bot.telegram.sendMessage(ctx.chat.id, "Change video settings", {
+    bot.telegram.sendMessage(ctx.chat.id, "Налаштування відео", {
         reply_markup:{
             inline_keyboard: [
                 [
-                    {text:"Order",callback_data:'order'},
-                    {text:"Duration",callback_data:'duration'},
-                    {text:"Number of videos",callback_data:'number_v'}
+                    {text:"Тип пошуку",callback_data:'order'},
+                    {text:"Тривалість",callback_data:'duration'},
+                    {text:"Кількість відео",callback_data:'number_v'}
                 ]
             ]
         }
@@ -180,4 +180,4 @@ bot.on('text', (ctx) => pgBase.createLinks(ctx.chat.id, ctx.message.text, functi
         ctx.reply(link);
 }))
 
-bot.startPolling() // запуск бота
+bot.startPolling()
