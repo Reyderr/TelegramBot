@@ -27,27 +27,3 @@
   - Можна обрати від 1 до 3 відео 
   
  ![img.png](img/img_4.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<style>
-img
-{
-    display:block;
-    float:none;
-    margin-left:auto;
-    margin-right:auto;
-}
-</style>
