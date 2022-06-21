@@ -19,6 +19,8 @@ bot.action('order', ctx=>{
                     {text:"Датою",callback_data:'ord_date'},
                     {text:"Рейтингом",callback_data:'ord_rat'},
                     {text:"Актуальністю",callback_data:'ord_rel'},
+                ],
+                [
                     {text:"Назвою",callback_data:'ord_title'},
                     {text:"Переглядами",callback_data:'ord_count'}
                 ],
